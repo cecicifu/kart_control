@@ -10,8 +10,9 @@ from time import sleep
 
 class Application(tkinter.Frame):
         
-	port, data, process = 'COM1', None, None
-
+	port = 'COM1'
+	data = process = None
+       
 	def __init__(self, master=None):
             
 		super().__init__(master)
@@ -136,7 +137,7 @@ class Application(tkinter.Frame):
 
 ROOT = tkinter.Tk()
 
-ROOT.title("Gasolina de autocars")
+ROOT.title("KartingControl")
 ROOT.geometry("600x250")
 ROOT.iconbitmap('gasolinera.ico')
 
