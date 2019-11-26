@@ -6,86 +6,84 @@ from random import randint
 from time import sleep
 import threading
 import serial.tools.list_ports
-
-from Widget import Widget
-
 import tkinter
 from tkinter import ttk
-from tkinter import Frame
+
+import widget
+
 
 class Application(tkinter.Frame):
-	port = "COM1"
-	data = process = None
+    port = "COM1"
+    data = process = None
 
-	def __init__(self, title, size, icon):
-		self.root = tkinter.Tk()
+    def __init__(self, title, size, icon):
+        self.root = tkinter.Tk()
 
-		super().__init__(self.root)
+        super().__init__(self.root)
 
-		self.root.title(title)
-		self.root.geometry(size)
-		self.root.iconbitmap(icon)
-		self.pack()
+        self.root.title(title)
+        self.root.geometry(size)
+        self.root.iconbitmap(icon)
+        self.pack()
 
-		self.app()
+        self.app()
 
-	def app(self):
-		try:
-			if self.port is None:
-				print("ERROR! Debe especificar un puerto.")
+    def app(self):
+        try:
+            if self.port is None:
+                print("ERROR! Debe especificar un puerto.")
 
-			self.data = serial.Serial(
-                            port=self.port,
-                            baudrate=9600,
-                            bytesize=serial.EIGHTBITS,
-                            parity=serial.PARITY_NONE,
-                            stopbits=serial.STOPBITS_ONE,
-                            timeout=1,
-                            xonxoff=False,
-                            rtscts=False,
-                            dsrdtr=False,
-                            writeTimeout=2
-                        )
-		except serial.SerialException:
-			Widget.white_box
-			Widget.text_box("No se ha detectado el puerto: " + self.port, "sans-serif", "18")
-			Widget.white_box
-		else:
-			Widget.white_box
-			Widget.text_box("Recibiendo datos por el puerto: " + self.port, "sans-serif", "18", "green")
-			# self.button_box("Recibir datos", "sans-serif", "14", self.refresh_data)
-			self.process = threading.Thread(target=self.refresh_data, daemon=True)
-			self.process.start()
-			Widget.white_box
-			self.bar = ttk.Progressbar(self, orient="horizontal", length=100, mode="determinate")
-			self.bar.pack()
+            self.data = serial.Serial(
+                port=self.port,
+                baudrate=9600,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                timeout=1,
+                xonxoff=False,
+                rtscts=False,
+                dsrdtr=False,
+                writeTimeout=2
+            )
+        except serial.SerialException:
+            widget.text_box("No se ha detectado el puerto: " +
+                            self.port, "sans-serif", "18")
 
-			self.calc1 = tkinter.Label(
-				self,
-				text="Calculando..",
-				font=("sans-serif", "12")
-			)
-			self.calc1.pack()
-			Widget.white_box
+        else:
+            widget.text_box("Recibiendo datos por el puerto: " +
+                            self.port, "sans-serif", "18", "green")
+            # self.button_box("Recibir datos", "sans-serif", "14", self.refresh_data)
+            self.process = threading.Thread(
+                target=self.refresh_data, daemon=True)
+            self.process.start()
 
-		Widget.button_box("Ver puertos disponibles", "sans-serif", "14", self.list_ports)
-		Widget.white_box
+            self.bar = ttk.Progressbar(
+                self, orient="horizontal", length=100, mode="determinate")
+            self.bar.pack()
 
-		Widget.button_box("Salir", "sans-serif", "14", self.exit_app, "red")
-		Widget.white_box
+            self.calc1 = tkinter.Label(
+                self,
+                text="Calculando..",
+                font=("sans-serif", "12")
+            )
+            self.calc1.pack()
 
-	def exit_app(self):
-		self.root.destroy()
+        # widget.button_box("Ver puertos disponibles",
+        #                  "sans-serif", "14", self.list_ports)
+        widget.button_box("Salir", "sans-serif", "14", self.exit_app, "red")
 
-	def refresh_data(self):
-		while True:
-			# print(self.data.readline().decode('ascii'))
-			sleep(3)
-			num = randint(0, 100)
-			self.bar["value"] = num
-			self.calc1.configure(text=("{} %").format(num))
+    def exit_app(self):
+        self.root.destroy()
 
-	def list_ports(self):
-		ports = []
-		for port in serial.tools.list_ports.comports():
-			ports.append(port)
+    def refresh_data(self):
+        while True:
+            # print(self.data.readline().decode('ascii'))
+            sleep(3)
+            num = randint(0, 100)
+            self.bar["value"] = num
+            self.calc1.configure(text=("{} %").format(num))
+
+    def list_ports(self):
+        ports = []
+        for port in serial.tools.list_ports.comports():
+            ports.append(port)
