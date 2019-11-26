@@ -6,28 +6,23 @@ from tkinter import messagebox
 import serial.tools.list_ports
 from random import randint
 from time import sleep
-# import serial
 
 class Application(tkinter.Frame):
         
 	port = 'COM1'
 	data = process = None
        
-	def __init__(self, main_window):
-            
-		super().__init__(main_window)
+	def __init__(self, title, size, icon):
 
-		self.notebook = ttk.Notebook(self)
+		self.root = tkinter.Tk()
+		super().__init__(self.root)
 
-		self.home_label = ttk.Label(self.notebook, text="www.recursospython.com")
-		self.ports_label = ttk.Label(self.notebook, text="foro.recursospython.com")
-
-		self.notebook.add(self.home_label, text="Inicio", padding=20)
-		self.notebook.add(self.ports_label, text="Puertos", padding=20)
-
-		self.notebook.pack(padx=10, pady=10)
+		self.root.title(title)
+		self.root.geometry(size)
+		self.root.iconbitmap(icon)
 
 		self.pack()
+		
 		self.app()
 
 	def white_box(self):
@@ -140,19 +135,11 @@ class Application(tkinter.Frame):
 	def list_ports(self):
 
 		ports = []
-
 		for port in serial.tools.list_ports.comports():
 			ports.append(port)
-		
 		messagebox.showinfo('Lista de puertos disponibles', ports)
 
 
-main_window = tkinter.Tk()
-
-main_window.title("KartingControl")
-
-main_window.geometry("600x270")
-main_window.iconbitmap('gasolinera.ico')
-
-APP = Application(main_window)
-APP.mainloop()
+if __name__ == "__main__":
+	APP = Application('KartingControl', '600x250', 'gasolinera.ico')
+	APP.mainloop()
