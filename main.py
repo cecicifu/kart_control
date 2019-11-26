@@ -13,10 +13,20 @@ class Application(tkinter.Frame):
 	port = 'COM1'
 	data = process = None
        
-	def __init__(self, master=None):
+	def __init__(self, main_window):
             
-		super().__init__(master)
-		self.master = master
+		super().__init__(main_window)
+
+		self.notebook = ttk.Notebook(self)
+
+		self.home_label = ttk.Label(self.notebook, text="www.recursospython.com")
+		self.ports_label = ttk.Label(self.notebook, text="foro.recursospython.com")
+
+		self.notebook.add(self.home_label, text="Inicio", padding=20)
+		self.notebook.add(self.ports_label, text="Puertos", padding=20)
+
+		self.notebook.pack(padx=10, pady=10)
+
 		self.pack()
 		self.app()
 
@@ -130,16 +140,19 @@ class Application(tkinter.Frame):
 	def list_ports(self):
 
 		ports = []
+
 		for port in serial.tools.list_ports.comports():
 			ports.append(port)
+		
 		messagebox.showinfo('Lista de puertos disponibles', ports)
 
 
-ROOT = tkinter.Tk()
+main_window = tkinter.Tk()
 
-ROOT.title("KartingControl")
-ROOT.geometry("600x250")
-ROOT.iconbitmap('gasolinera.ico')
+main_window.title("KartingControl")
 
-APP = Application(master=ROOT)
+main_window.geometry("600x270")
+main_window.iconbitmap('gasolinera.ico')
+
+APP = Application(main_window)
 APP.mainloop()
