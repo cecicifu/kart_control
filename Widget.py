@@ -1,9 +1,11 @@
+# TODO: Convertir a clase e invocarla en Application.py
+
 import tkinter
 
 
-def white_box():
-    wb = tkinter.Label(text="")
-    wb.pack()
+def space_box():
+    sb = tkinter.Label(text="")
+    sb.pack()
 
 
 def button_box(text, font, size, cmd, color=None):
