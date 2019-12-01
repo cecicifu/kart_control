@@ -1,6 +1,3 @@
-# TODO: Posibilidad de cambiar Threading por multiprocessing
-# TODO: Sistema de ventanas (TABS), una que muestre el listado de puertos COM disponibles
-
 # import multiprocessing
 from random import randint
 from time import sleep
@@ -9,11 +6,44 @@ import serial.tools.list_ports
 import tkinter as tk
 from tkinter import ttk
 
-import widget
 
 if __name__ == "__main__":
     port = "COM1"
     data = process = None
+
+    def space_box():
+        sb = tk.Label(text="")
+        sb.pack()
+
+    def button_box(text, font, size, cmd, color=None):
+        if color is not None:
+            btn = tk.Button(
+                text=text,
+                font=(font, size),
+                command=cmd,
+                fg=color
+            )
+        else:
+            btn = tk.Button(
+                text=text,
+                font=(font, size),
+                command=cmd
+            )
+        btn.pack()
+
+    def text_box(text, font, size, color=None):
+        if color is not None:
+            text = tk.Label(
+                text=text,
+                font=(font, size),
+                fg=color
+            )
+        else:
+            text = tk.Label(
+                text=text,
+                font=(font, size)
+            )
+        text.pack()
 
     def exit_app():
         APP.destroy()
@@ -53,12 +83,12 @@ if __name__ == "__main__":
             writeTimeout=2
         )
     except serial.SerialException:
-        widget.text_box("No se ha detectado el puerto: " +
-                        port, "sans-serif", "18")
+        text_box("No se ha detectado el puerto: " +
+                 port, "sans-serif", "18")
 
     else:
-        widget.text_box("Recibiendo datos por el puerto: " +
-                        port, "sans-serif", "18", "green")
+        text_box("Recibiendo datos por el puerto: " +
+                 port, "sans-serif", "18", "green")
         # button_box("Recibir datos", "sans-serif", "14", refresh_data)
         process = threading.Thread(
             target=refresh_data, daemon=True)
@@ -72,7 +102,7 @@ if __name__ == "__main__":
             text="Calculando..", font=("sans-serif", "12"))
         calc_text.pack()
 
-    # widget.button_box("Ver puertos disponibles", "sans-serif", "14", list_ports)
-    widget.button_box("Salir", "sans-serif", "14", exit_app, "red")
+    # button_box("Ver puertos disponibles", "sans-serif", "14", list_ports)
+    button_box("Salir", "sans-serif", "14", exit_app, "red")
 
     APP.mainloop()
